@@ -117,12 +117,7 @@ function detectBrickCollision() {
     }
 }
 
-function main() {
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    drawBall();
-    drawPaddle();
-    drawBricks();
-    detectBrickCollision();
+function moveBall() {
     const ballHitsTheWall = (ballX + ballDX > canvas.width - BALL_RADIUS) || (ballX + ballDX < BALL_RADIUS);
     const ballHitsTheCeiling = ballY + ballDY < BALL_RADIUS;
     if (ballHitsTheWall) {
@@ -144,11 +139,28 @@ function main() {
     }
     ballX += ballDX;
     ballY += ballDY;
+}
+
+function movePaddle() {
     if (rightPressed && (paddleX < canvas.width - PADDLE_WIDTH)) {
         paddleX += PADDLE_MOVE_LENGTH;
     } else if (leftPressed && paddleX > 0) {
         paddleX -= PADDLE_MOVE_LENGTH;
     }
+}
+
+function handleMovement() {
+    moveBall();
+    movePaddle();
+}
+
+function main() {
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    drawBall();
+    drawPaddle();
+    drawBricks();
+    detectBrickCollision();
+    handleMovement();
     requestAnimationFrame(main);
 }
 
