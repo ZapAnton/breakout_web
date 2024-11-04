@@ -2,6 +2,7 @@ const FIELD_WIDTH = 900;
 const FIELD_HEIGHT = 600;
 const PADDLE_WIDTH = 75;
 const PADDLE_HEIGHT = 10;
+const PADDLE_MOVE_LENGTH = 7;
 const PADDLE_COLOR = "#0095DD";
 const BALL_COLOR = "#0095DD";
 const BRICK_COLOR = "#0095DD";
@@ -18,14 +19,41 @@ const canvas = document.getElementById("gameCanvas");
 const context = canvas.getContext("2d");
 canvas.width = FIELD_WIDTH;
 canvas.height = FIELD_HEIGHT;
-const paddleX = (canvas.width - PADDLE_WIDTH) / 2;
+let paddleX = (canvas.width - PADDLE_WIDTH) / 2;
 const ballX = canvas.width / 2;
 const ballY = canvas.height - 30;
+const ballDX = 2;
+const ballDY = -2;
 const bricks = [];
 for (let col = 0; col < COLUMN_COUNT; ++col) {
     bricks[col] = [];
     for (let row = 0; row < ROW_COUNT; ++row) {
         bricks[col][row] = {x: 0, y: 0, isBroken: false}
+    }
+}
+let rightPressed = false;
+let leftPressed = false;
+
+document.addEventListener("keydown", keyDownHandler, false);
+document.addEventListener("keyup", keyUpHandler, false);
+
+function keyDownHandler(e) {
+    const rightKeyDown = e.key === "Right" || e.key === "ArrowRight";
+    const leftKeyDown = e.key === "Left" || e.key === "ArrowLeft";
+    if (rightKeyDown) {
+        rightPressed = true;
+    } else if (leftKeyDown) {
+        leftPressed = true;
+    }
+}
+
+function keyUpHandler(e) {
+    const rightKeyUp = e.key === "Right" || e.key === "ArrowRight";
+    const leftKeyUp = e.key === "Left" || e.key === "ArrowLeft";
+    if (rightKeyUp) {
+        rightPressed = false;
+    } else if (leftKeyUp) {
+        leftPressed = false;
     }
 }
 
@@ -65,9 +93,26 @@ function drawBricks() {
 }
 
 function main() {
+    context.clearRect(0, 0, canvas.width, canvas.height);
     drawBall();
     drawPaddle();
     drawBricks();
+    /*
+    const isBallAtWall = (ballX + ballDX > canvas.width - BALL_RADIUS || ballX + ballDX < BALL_RADIUS);
+    const isBallAtCeiling = ballY + ballDY < BALL_RADIUS;
+    if (isBallAtWall) {
+        ballDX = -ballDX;
+    }
+    if (isBallAtCeiling) {
+        ballDY = - ballDY;
+    } else if (ballY + ballDY > canvas.height - BALL_RADIUS)
+    */
+    if (rightPressed && (paddleX < canvas.width - PADDLE_WIDTH)) {
+        paddleX += PADDLE_MOVE_LENGTH;
+    } else if (leftPressed && paddleX > 0) {
+        paddleX -= PADDLE_MOVE_LENGTH;
+    }
+    requestAnimationFrame(main);
 }
 
 main();
