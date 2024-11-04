@@ -1,3 +1,5 @@
+const COLUMN_COUNT = 10;
+const ROW_COUNT = 5;
 const FIELD_WIDTH = 900;
 const FIELD_HEIGHT = 600;
 const PADDLE_WIDTH = 75;
@@ -7,8 +9,6 @@ const PADDLE_COLOR = "#0095DD";
 const BALL_COLOR = "#0095DD";
 const BRICK_COLOR = "#0095DD";
 const BALL_RADIUS = 10;
-const COLUMN_COUNT = 10;
-const ROW_COUNT = 5;
 const BRICK_WIDTH = 75;
 const BRICK_HEIGHT = 20;
 const BRICK_PADDING = 10;
@@ -24,6 +24,7 @@ let ballX = canvas.width / 2;
 let ballY = canvas.height - 30;
 let ballDX = 5;
 let ballDY = -5;
+let score = 0;
 const bricks = [];
 for (let col = 0; col < COLUMN_COUNT; ++col) {
     bricks[col] = [];
@@ -92,11 +93,36 @@ function drawBricks() {
     }
 }
 
+function detectBrickCollision() {
+    for (let col = 0; col < COLUMN_COUNT; ++col) {
+        for (let row = 0; row < ROW_COUNT; ++row) {
+            const brick = bricks[col][row];
+            if (brick.isBroken) {
+                continue;
+            }
+            const ballHitsTheBrick = (ballX > brick.x) && 
+                (ballX < brick.x + BRICK_WIDTH) &&
+                (ballY > brick.y) &&
+                (ballY < brick.y + BRICK_HEIGHT);
+            if (ballHitsTheBrick) {
+                ballDY = -ballDY;
+                brick.isBroken = true;
+                score += 1;
+                if (score === ROW_COUNT * COLUMN_COUNT) {
+                    alert("You Won!");
+                    document.location.reload();
+                }
+            }
+        }
+    }
+}
+
 function main() {
     context.clearRect(0, 0, canvas.width, canvas.height);
     drawBall();
     drawPaddle();
     drawBricks();
+    detectBrickCollision();
     const ballHitsTheWall = (ballX + ballDX > canvas.width - BALL_RADIUS) || (ballX + ballDX < BALL_RADIUS);
     const ballHitsTheCeiling = ballY + ballDY < BALL_RADIUS;
     if (ballHitsTheWall) {
