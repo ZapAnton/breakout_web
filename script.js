@@ -20,10 +20,10 @@ const context = canvas.getContext("2d");
 canvas.width = FIELD_WIDTH;
 canvas.height = FIELD_HEIGHT;
 let paddleX = (canvas.width - PADDLE_WIDTH) / 2;
-const ballX = canvas.width / 2;
-const ballY = canvas.height - 30;
-const ballDX = 2;
-const ballDY = -2;
+let ballX = canvas.width / 2;
+let ballY = canvas.height - 30;
+let ballDX = 5;
+let ballDY = -5;
 const bricks = [];
 for (let col = 0; col < COLUMN_COUNT; ++col) {
     bricks[col] = [];
@@ -97,16 +97,27 @@ function main() {
     drawBall();
     drawPaddle();
     drawBricks();
-    /*
-    const isBallAtWall = (ballX + ballDX > canvas.width - BALL_RADIUS || ballX + ballDX < BALL_RADIUS);
-    const isBallAtCeiling = ballY + ballDY < BALL_RADIUS;
-    if (isBallAtWall) {
+    const ballHitsTheWall = (ballX + ballDX > canvas.width - BALL_RADIUS) || (ballX + ballDX < BALL_RADIUS);
+    const ballHitsTheCeiling = ballY + ballDY < BALL_RADIUS;
+    if (ballHitsTheWall) {
         ballDX = -ballDX;
     }
-    if (isBallAtCeiling) {
+    if (ballHitsTheCeiling) {
         ballDY = - ballDY;
-    } else if (ballY + ballDY > canvas.height - BALL_RADIUS)
-    */
+    } else if (ballY + ballDY > canvas.height - BALL_RADIUS) {
+        const ballHitsThePaddle = (ballX > paddleX) && (ballX < paddleX + PADDLE_WIDTH)
+        if (ballHitsThePaddle) {
+            ballDY = -ballDY;
+        } else {
+            if (confirm("Game Over. Restart?")) {
+                document.location.reload();
+            } else {
+                document.location.reload();
+            }
+        }
+    }
+    ballX += ballDX;
+    ballY += ballDY;
     if (rightPressed && (paddleX < canvas.width - PADDLE_WIDTH)) {
         paddleX += PADDLE_MOVE_LENGTH;
     } else if (leftPressed && paddleX > 0) {
