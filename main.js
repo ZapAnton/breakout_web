@@ -1,20 +1,3 @@
-const COLUMN_COUNT = 10;
-const ROW_COUNT = 5;
-const FIELD_WIDTH = 900;
-const FIELD_HEIGHT = 600;
-const PADDLE_WIDTH = 75;
-const PADDLE_HEIGHT = 10;
-const PADDLE_MOVE_LENGTH = 7;
-const PADDLE_COLOR = "#0095DD";
-const BALL_COLOR = "#0095DD";
-const BRICK_COLOR = "#0095DD";
-const BALL_RADIUS = 10;
-const BRICK_WIDTH = 75;
-const BRICK_HEIGHT = 20;
-const BRICK_PADDING = 10;
-const BRICK_OFFSET_TOP = 30;
-const BRICK_OFFSET_LEFT = 30;
-
 const canvas = document.getElementById("gameCanvas");
 const context = canvas.getContext("2d");
 canvas.width = FIELD_WIDTH;
